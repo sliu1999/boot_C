@@ -1,0 +1,37 @@
+server:
+  port: 8087
+
+spring:
+  application:
+    name: boot_C
+  rabbitmq:
+    host: 192.168.1.17
+    port: 5672
+    username: sliu
+    password: admin123
+    virtual-host: host2
+  redis:
+    host: 192.168.1.15
+    password: 123456
+    port: 6379
+  hmconfig:
+    exchange: hmconfig-jscto-exchange
+    queue-public:
+      name: hmconfig-jscto-public-queue
+      topic: hmconfig-jscto-public-topic
+    #私有队列的name和topic必须和其他业务服务不同名
+    queue-private:
+      #queueName
+      name: hmconfig-boot-c-queue
+      #routeKey
+      topic: hmconfig-boot-c-topic
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://47.117.128.180:3306/boot_c?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: 12345678
+
+mybatis:
+  mapper-locations: classpath*:config/mybatis/mappers/mysql/**/*.xml
+  config-location: classpath:config/mybatis/config/mysql/mybatis-config.xml
+

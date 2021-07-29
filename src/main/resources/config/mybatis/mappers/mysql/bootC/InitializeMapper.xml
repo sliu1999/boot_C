@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sliu.mapper.InitializeMapper">
+  <!--start 查询信息总条数-->
+  <select id="queryInfoCount" parameterType = "map" resultType="int">
+        SELECT
+            COUNT(*)
+            FROM
+            ${tableName}
+    </select>
+  <!--end 查询信息总条数-->
+
+  <!--start 查询指定信息-->
+  <select id="queryInfos" parameterType="map" resultType = "java.util.LinkedHashMap">
+        SELECT *
+        FROM
+        ${tableName}
+        where 1 = 1
+        limit #{num},#{size}
+    </select>
+  <!--end 查询指定信息-->
+
+  <select id="selectColumnsInfo" parameterType="map" resultType="java.util.HashMap">
+        show full columns from ${tableName}
+    </select>
+
+  <insert id="insertInfos" parameterType="map">
+    insert into ${tableName}
+    <foreach collection="keys" open="(" close=")" item="key" separator=",">
+      ${key}
+    </foreach>
+    values
+    <foreach collection="list" item="values" separator=",">
+      <foreach collection="values" open="(" close=")" item="value" separator=",">
+        <choose>
+          <when test="value.type == 'timestamp'">
+            FROM_UNIXTIME(#{value.value}/1000,'%Y-%m-%d %h:%m:%s')
+          </when>
+          <when test="value.value == null">
+            null
+          </when>
+          <otherwise>
+            #{value.value}
+          </otherwise>
+        </choose>
+      </foreach>
+    </foreach>
+  </insert>
+
+  <insert id="createBackupTable" parameterType="map">
+        CREATE TABLE backup_${datetime} comment #{tableName}
+        SELECT * FROM ${tableName}
+    </insert>
+
+  <delete id="clearTable" parameterType="map">
+        DELETE FROM ${tableName}
+    </delete>
+
+</mapper>

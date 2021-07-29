@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sliu.mapper.QueueInfoMapper">
+  <resultMap id="BaseResultMap" type="sliu.domain.QueueInfo">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="QUEUE" jdbcType="VARCHAR" property="queue" />
+    <result column="TOPIC" jdbcType="VARCHAR" property="topic" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="STATUS" jdbcType="INTEGER" property="status" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+
+  <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT ID, NAME, QUEUE, TOPIC, CREATE_TIME, STATUS, REMARK
+    FROM tb_queue_info WHERE NAME = #{name}
+  </select>
+
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT ID, NAME, QUEUE, TOPIC, CREATE_TIME, STATUS, REMARK
+    FROM tb_queue_info WHERE ID = #{id}
+  </select>
+
+  <insert id="insertNewQueue" parameterType="sliu.domain.QueueInfo">
+    <selectKey  keyProperty="id" resultType="String" order="BEFORE">
+      <![CDATA[  SELECT uuid()  FROM  dual  ]]>
+    </selectKey>
+    insert into tb_queue_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="queue != null">
+        QUEUE,
+      </if>
+      <if test="topic != null">
+        TOPIC,
+      </if>
+      CREATE_TIME,
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="queue != null">
+        #{queue,jdbcType=VARCHAR},
+      </if>
+      <if test="topic != null">
+        #{topic,jdbcType=VARCHAR},
+      </if>
+      SYSDATE(),
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <insert id="insertQueue" parameterType="sliu.domain.QueueInfo">
+    insert into tb_queue_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="queue != null">
+        QUEUE,
+      </if>
+      <if test="topic != null">
+        TOPIC,
+      </if>
+      CREATE_TIME,
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="queue != null">
+        #{queue,jdbcType=VARCHAR},
+      </if>
+      <if test="topic != null">
+        #{topic,jdbcType=VARCHAR},
+      </if>
+      SYSDATE(),
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateQueue" parameterType="sliu.domain.QueueInfo">
+    update tb_queue_info
+    <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="queue != null">
+        QUEUE = #{queue,jdbcType=VARCHAR},
+      </if>
+      <if test="topic != null">
+        TOPIC = #{topic,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectAll" parameterType="map" resultMap="BaseResultMap">
+    SELECT ID, NAME, QUEUE, TOPIC, CREATE_TIME, STATUS, REMARK
+    FROM tb_queue_info WHERE 1=1
+    <if test="excludeNames != null">
+      AND NAME NOT IN
+      <foreach collection="excludeNames" separator="," open="(" close=")" item="name">
+        #{name}
+      </foreach>
+    </if>
+  </select>
+
+</mapper>
